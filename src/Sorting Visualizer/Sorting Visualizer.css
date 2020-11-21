@@ -1,0 +1,12 @@
+.offset:before {
+    display: block;
+    content: "";
+    height: 4rem;
+    margin-top: -4rem;
+}
+.card{
+ 
+}
+.row text-center{
+    margin-top: 4rem;
+}
