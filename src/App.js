@@ -1,10 +1,13 @@
-import logo from './logo.svg';
+import 'bootstrap/dist/css/bootstrap.css';
+import React from 'react';
+import SortingVisualizer from './Sorting Visualizer/SortingVisualizer'
 import './App.css';
-import SortingVisualizer from './Sorting Visualizer/Sorting Visualizer';
 
 function App() {
   return (
-    <SortingVisualizer></SortingVisualizer>
+    <div className="App">
+      <SortingVisualizer></SortingVisualizer>
+    </div>
   );
 }
 
