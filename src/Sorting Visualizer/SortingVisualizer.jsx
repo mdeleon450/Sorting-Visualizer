@@ -1,13 +1,18 @@
 import React from "react";
+import {getMergeSortAnimations} from '../sortingAlgorithms/sortingAlgorithms.js'
 import './Sorting Visualizer.css';
+
+const ANIMATION_SPEED_MS = 1;
+
+const SECONDARY_COLOR = 'rgba(163,173,56,.5)';
 
 export default class SortingVisualizer extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            deck: new Array(52),
+            deck: [],
             dealSize: 10,
-            visibleDeck: new Array(52),
+            visibleDeck: [],
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -47,25 +52,61 @@ export default class SortingVisualizer extends React.Component{
         alert('Deal: '+this.state.dealSize);
         event.preventDefault();
         this.dealCards();
-        this.render();
     }
     componentDidMount(){
         this.dealCards();
     }
     dealCards (){
-        if(this.state.dealSize <= 1){
-            x = this.state.deck[~~(this.state.deck.length*Math.random())];
-            return;
-        }
-        let x = new Array(this.state.dealSize-1);
-        for(let i=0; i< this.state.dealSize-1; i++){
-            x[i]= this.state.deck[~~(this.state.deck.length * Math.random())];
+        let x = [];
+        for(let i=0; i < this.state.dealSize; i++){
+            x.push(this.state.deck[Math.floor(Math.random()*this.state.deck.length)]);
         }
         this.setState({visibleDeck: x});
     }
+    mergeSort(){
+        
+    }
+
+    quickSort(){
+
+    }
+
+    selectionSort(){
+
+    }
+    
+    bubbleSort(){
+        
+    }
+
     render(){
         return (
             <div>
+                <nav className="navbar navbar-expand md navbar-dark bg-dark fixed-top">
+                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+                    <p className="navbar-brand">Sorting Visualizer</p>
+                    <div className="collapse navbar-collapse" id="navbarResponsive">
+                        <ul className="navbar-nav ml-auto">
+                            <li className="nav-item">
+                                <button className="btn btn-secondary btn-md" type="button" onClick={() => this.dealCards()}>Shuffle Deck</button>
+                            </li>
+                            <li className="nav-item">
+                                <button className="btn btn-secondary btn-md" type="button" onClick={() => this.mergeSort()}>Merge Sort</button> 
+                            </li>
+                            <li className="nav-item">
+                                <button className="btn btn-secondary btn-md" type="button" onClick={() => this.quickSort()}>Quick Sort</button>
+                            </li>
+                            <li className="nav-item">
+                                <button className="btn btn-secondary btn-md" type="button" onClick={() => this.selectionSort()}>Selection Sort</button>
+                            </li>
+                            <li className="nav-item">
+                                <button className="btn btn-secondary btn-md" type="button" onClick={() => this.bubbleSort()}>Bubble Sort</button>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
                 <form id="sizeForm" onSubmit={this.handleSubmit}>
                     <label>
                         Size:
@@ -74,7 +115,7 @@ export default class SortingVisualizer extends React.Component{
                     <input className="btn btn-secondary btn-sm" type="submit" value="Submit"></input>
                 </form>
                 <div className="row text-center">
-                    {this.state.visibleDeck.map((Card)=><div className="col-xs-2">{Card}</div>)};
+                    {this.state.visibleDeck.map((Card, idx)=><div className="col-xs-2 text-center" key={idx} >{Card}</div>)}
                 </div>
             </div>
         );
@@ -84,9 +125,7 @@ class Card extends React.Component{
     render(){
        let altVal = this.props.CardValue+this.props.CardSuite;
        let baseUrl = "/img/";
-        return (<div>
-                    <img className="Card" src={(process.env.PUBLIC_URL+baseUrl+this.props.CardImg)} alt={altVal} width="300px" height="400px"></img>
-                </div>
+        return (<img className="Card" src={(process.env.PUBLIC_URL+baseUrl+this.props.CardImg)} alt={altVal}></img>
         );
     }
 }
