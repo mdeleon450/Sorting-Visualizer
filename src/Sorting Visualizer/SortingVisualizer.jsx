@@ -107,13 +107,13 @@ export default class SortingVisualizer extends React.Component{
                         </ul>
                     </div>
                 </nav>
-                <form id="sizeForm" onSubmit={this.handleSubmit}>
-                    <label>
-                        Size:
-                        <input type="number" value={this.state.dealSize} onChange={this.handleChange}/>
-                    </label>
-                    <input className="btn btn-secondary btn-sm" type="submit" value="Submit"></input>
-                </form>
+                <div className="col-12 text-center">
+                    <form className="sizeForm" onSubmit={this.handleSubmit}>
+                        Cards Dealt
+                        <br></br><input className="dealSize" type="number" value={this.state.dealSize} onChange={this.handleChange} min="1" max="52"/>
+                        <br></br><input className="btn btn-secondary btn-sm" type="submit" value="Submit"></input>
+                    </form>
+                </div>
                 <div className="row text-center">
                     {this.state.visibleDeck.map((Card, idx)=><div className="col-xs-2 text-center" key={idx} >{Card}</div>)}
                 </div>

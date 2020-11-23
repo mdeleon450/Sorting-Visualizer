@@ -7,8 +7,15 @@
 .nav-item{
     margin-right:1rem;
 }
-#sizeForm{
+.sizeForm{
     margin-top: 6rem;
+}
+.dealSize{
+    width: 4rem;
+}
+.sizeForm input{
+    margin-top: 1rem;
+    margin-right: 1rem;
 }
 .Card{
     width: 200px;
