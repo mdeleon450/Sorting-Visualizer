@@ -158,7 +158,8 @@ export default class SortingVisualizer extends React.Component{
                                     <div className="col-xs-2 text-center">
                                         <img className="Card" 
                                             style={{backgroundColor: PRIMARY_COLOR}} 
-                                            src={(process.env.PUBLIC_URL+this.state.img[idx])}>
+                                            src={(process.env.PUBLIC_URL+this.state.img[idx])}
+                                            alt="c">
                                         </img>
                                     </div>))};
                 </div>
