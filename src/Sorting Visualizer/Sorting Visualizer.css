@@ -20,10 +20,14 @@
 .Card{
     width: 200px;
     height: 300px;
-    padding: 1rem 1rem;
+    padding: .5rem .5rem;
+    background-color:'';
 }
 .row{
     margin-top: 1rem;
     margin-left: 2rem;
     margin-right: 2rem;
+}
+.col-xs-2 {
+    padding: 1rem 1rem;
 }

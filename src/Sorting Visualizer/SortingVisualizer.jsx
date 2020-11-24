@@ -1,9 +1,10 @@
 import React from "react";
-import {getMergeSortAnimations} from '../sortingAlgorithms/sortingAlgorithms.js'
+import {getBubbleSortAnimations, getMergeSortAnimations, getInsertionSortAnimations, getSelectionSortAnimations} from '../sortingAlgorithms/sortingAlgorithms.js'
 import './Sorting Visualizer.css';
 
-const ANIMATION_SPEED_MS = 1;
+const ANIMATION_SPEED_MS = 5;
 
+const PRIMARY_COLOR = '';
 const SECONDARY_COLOR = 'rgba(163,173,56,.5)';
 
 export default class SortingVisualizer extends React.Component{
@@ -13,6 +14,8 @@ export default class SortingVisualizer extends React.Component{
             deck: [],
             dealSize: 10,
             visibleDeck: [],
+            visibleImgs: [],
+            img: [],
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -22,23 +25,27 @@ export default class SortingVisualizer extends React.Component{
             switch(i%4){
                 case 0:
                     tempVal = (i%13)+1;
-                    tempImg = tempVal+"H.png";
-                    this.state.deck.push(<Card CardSuite="H" CardValue={tempVal} CardImg={tempImg}></Card>);
+                    tempImg = '/img/'+tempVal+"H.png";
+                    this.state.deck.push(tempVal);
+                    this.state.img.push(tempImg);
                     break;
                 case 1:
                     tempVal = (i%13)+1;
-                    tempImg = tempVal+"D.png";
-                    this.state.deck.push(<Card CardSuite="D" CardValue={tempVal} CardImg={tempImg}></Card>);
+                    tempImg = '/img/'+tempVal+"D.png";
+                    this.state.deck.push(tempVal);
+                    this.state.img.push(tempImg);
                     break;
                 case 2:
                     tempVal = (i%13)+1;
-                    tempImg = tempVal+"C.png";
-                    this.state.deck.push(<Card CardSuite="C" CardValue={tempVal} CardImg={tempImg}></Card>);
+                    tempImg = '/img/'+tempVal+"C.png";
+                    this.state.deck.push(tempVal);
+                    this.state.img.push(tempImg);
                     break;
                 case 3:
                     tempVal = (i%13)+1;
-                    tempImg = tempVal+"S.png";
-                    this.state.deck.push(<Card CardSuite="S" CardValue={tempVal} CardImg={tempImg}></Card>);
+                    tempImg = '/img/'+tempVal+"S.png";
+                    this.state.deck.push(tempVal);
+                    this.state.img.push(tempImg);
                     break;
                 default:
                     break;
@@ -58,25 +65,57 @@ export default class SortingVisualizer extends React.Component{
     }
     dealCards (){
         let x = [];
+        let y = [];
         for(let i=0; i < this.state.dealSize; i++){
-            x.push(this.state.deck[Math.floor(Math.random()*this.state.deck.length)]);
+            let randomIndex = Math.floor(Math.random()*this.state.deck.length);
+            x.push(this.state.deck[randomIndex]);
+            y.push(this.state.img[randomIndex]);
         }
-        this.setState({visibleDeck: x});
+        this.setState({visibleDeck: x, visibleImgs: y});
+    }
+    doAnimations(animations){
+        for (let i = 0; i < animations.length; i++) {
+            const arrayCards = document.getElementsByClassName('Card');
+            const isColorChange = i % 3 !== 2;
+            if (isColorChange) {
+                const [cardOneIdx, cardTwoIdx] = animations[i];
+                const cardOneStyle = arrayCards[cardOneIdx].style;
+                const cardTwoStyle = arrayCards[cardTwoIdx].style;
+                const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
+                setTimeout(() => {
+                cardOneStyle.backgroundColor = color;
+                cardTwoStyle.backgroundColor = color;
+                }, i * ANIMATION_SPEED_MS);
+            } else {
+                setTimeout(() => {
+                const [cardOneIdx, cardTwoIdx] = animations[i];
+                const cardOneImg = this.state.img[cardOneIdx]
+                let imgArr = this.state.visibleImgs;
+                imgArr[cardTwoIdx] = cardOneImg;
+                imgArr[cardOneIdx] = this.state.visibleImgs[cardTwoIdx];
+                this.setState({visibleImgs: imgArr});
+                }, i * ANIMATION_SPEED_MS);
+            }
+        }
     }
     mergeSort(){
-        
+        const animations = getMergeSortAnimations(this.state.visibleDeck);
+        this.doAnimations(animations);
     }
 
-    quickSort(){
-
+    insertionSort(){
+        const animations = getInsertionSortAnimations(this.state.visibleDeck);
+        this.doAnimations(animations);
     }
 
     selectionSort(){
-
+        const animations = getSelectionSortAnimations(this.state.visibleDeck);
+        this.doAnimations(animations);
     }
     
     bubbleSort(){
-        
+        const animations = getBubbleSortAnimations(this.state.visibleDeck);
+        this.doAnimations(animations);
     }
 
     render(){
@@ -96,7 +135,7 @@ export default class SortingVisualizer extends React.Component{
                                 <button className="btn btn-secondary btn-md" type="button" onClick={() => this.mergeSort()}>Merge Sort</button> 
                             </li>
                             <li className="nav-item">
-                                <button className="btn btn-secondary btn-md" type="button" onClick={() => this.quickSort()}>Quick Sort</button>
+                                <button className="btn btn-secondary btn-md" type="button" onClick={() => this.insertionSort()}>Insertion Sort</button>
                             </li>
                             <li className="nav-item">
                                 <button className="btn btn-secondary btn-md" type="button" onClick={() => this.selectionSort()}>Selection Sort</button>
@@ -115,17 +154,16 @@ export default class SortingVisualizer extends React.Component{
                     </form>
                 </div>
                 <div className="row text-center">
-                    {this.state.visibleDeck.map((Card, idx)=><div className="col-xs-2 text-center" key={idx} >{Card}</div>)}
+                    {this.state.visibleDeck.map((idx)=> (
+                                    <div className="col-xs-2 text-center">
+                                        <img className="Card" 
+                                            style={{backgroundColor: PRIMARY_COLOR}} 
+                                            src={(process.env.PUBLIC_URL+this.state.img[idx])}>
+                                        </img>
+                                    </div>))};
                 </div>
             </div>
         );
     }  
 }
-class Card extends React.Component{
-    render(){
-       let altVal = this.props.CardValue+this.props.CardSuite;
-       let baseUrl = "/img/";
-        return (<img className="Card" src={(process.env.PUBLIC_URL+baseUrl+this.props.CardImg)} alt={altVal}></img>
-        );
-    }
-}
+
